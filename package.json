@@ -1,0 +1,16 @@
+{
+  "name": "accounts_project",
+  "version": "1.0.0",
+  "description": "A bank account ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "Cadu Conrado",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "inquirer": "^8.1.2"
+  }
+}
