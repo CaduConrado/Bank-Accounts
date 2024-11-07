@@ -4,6 +4,8 @@ const fs = require("fs");
 
 console.log("Hello, Accounts Project!");
 operation();
+
+//função para apresentar as opções de operações
 function operation() {
   inquirer
     .prompt([
@@ -201,6 +203,7 @@ function getBalance(accountName) {
     .catch();
 }
 
+//função de saque
 function withDraw() {
   inquirer
     .prompt([
@@ -224,6 +227,7 @@ function withDraw() {
     .catch((error) => console.log(error));
 }
 
+//função de remover quantia da conta
 function removeAmount(accountName) {
   inquirer
     .prompt([
@@ -257,6 +261,7 @@ function removeAmount(accountName) {
     .catch();
 }
 
+//função para verificar se o saldo é suficiente para o saque
 function checkAmount(accountName, wdAmount) {
   const accountData = getAccount(accountName);
   if (parseFloat(accountData.balance) >= wdAmount) {
