@@ -24,20 +24,28 @@ function operation() {
       const action = answer["action"];
       switch (action) {
         case "Criar Conta":
-          buildAccount();
+          createAccount();
+          break;
+        case "Consultar Saldo":
+          getBalance();
           break;
         case "Depositar":
           deposit();
           break;
+        case "Sacar":
+          withDraw();
+          break;
         case "Sair":
           console.log(chalk.bgBlue.black("Obrigado por usar o nosso serviço"));
           process.exit();
+        default:
+          console.log(chalk.bgRed.black("Erro, tente novamente mais tarde."));
       }
     })
     .catch((error) => console.log(error));
 }
 
-//function createAccount
+//função que chama build account
 function createAccount() {
   console.log(
     chalk.bgGreen.black(
@@ -48,6 +56,7 @@ function createAccount() {
   buildAccount();
 }
 
+//função para criar conta
 function buildAccount() {
   inquirer
     .prompt([
@@ -86,6 +95,7 @@ function buildAccount() {
     .catch((error) => console.log(error));
 }
 
+//função de deposito
 function deposit() {
   inquirer
     .prompt([
@@ -96,7 +106,6 @@ function deposit() {
     ])
     .then((answer) => {
       accountName = answer["checkAccount"];
-      console.log(accountName);
 
       if (!checkAccount(accountName)) {
         console.log(
@@ -122,6 +131,7 @@ function deposit() {
     .catch();
 }
 
+//função para checar se a conta existe
 function checkAccount(account) {
   if (!fs.existsSync(`accounts/${account}.json`)) {
     return false;
@@ -130,6 +140,7 @@ function checkAccount(account) {
   }
 }
 
+//função de adicionar dinheiro ao saldo
 function addAmount(accountName, amount) {
   const accountData = getAccount(accountName);
   if (!amount) {
@@ -154,10 +165,103 @@ function addAmount(accountName, amount) {
   }
 }
 
+//função para pegar os dados da conta
 function getAccount(accountName) {
   const accountJSON = fs.readFileSync(`accounts/${accountName}.json`, {
     encoding: "utf8",
     flag: "r",
   });
   return JSON.parse(accountJSON);
+}
+
+//função de consultar saldo
+function getBalance(accountName) {
+  inquirer
+    .prompt([
+      {
+        name: "accountName",
+        message: "Informe a sua conta: ",
+      },
+    ])
+    .then((answer) => {
+      const accountName = answer["accountName"];
+
+      if (!checkAccount(accountName)) {
+        console.log(
+          chalk.bgRed.black("Essa conta não existe, por favor informe outra!")
+        );
+        getBalance();
+      } else {
+        const accountData = getAccount(accountName);
+
+        console.log(chalk.bgBlue.black(`Saldo: R$${accountData.balance},00`));
+        operation();
+      }
+    })
+    .catch();
+}
+
+function withDraw() {
+  inquirer
+    .prompt([
+      {
+        name: "accountName",
+        message: "Informe o nome da sua conta: ",
+      },
+    ])
+    .then((answer) => {
+      const accountName = answer["accountName"];
+
+      if (!checkAccount(accountName)) {
+        console.log(
+          chalk.bgRed.black("Essa conta não existe, por favor informe outra!")
+        );
+        withDraw();
+      } else {
+        removeAmount(accountName);
+      }
+    })
+    .catch((error) => console.log(error));
+}
+
+function removeAmount(accountName) {
+  inquirer
+    .prompt([
+      {
+        name: "amount",
+        message: "Informe o valor do saque: ",
+      },
+    ])
+    .then((answer) => {
+      const accountData = getAccount(accountName);
+      const amount = answer["amount"];
+      if (!checkAmount(accountName, amount)) {
+        console.log(chalk.bgRed.black("Saldo insuficiente."));
+        operation();
+      } else {
+        accountData.balance = parseFloat(accountData.balance) - amount;
+        fs.writeFileSync(
+          `accounts/${accountName}.json`,
+          JSON.stringify(accountData),
+          (error) => console.log(error)
+        );
+        console.log(
+          chalk.bgGreen.white(
+            `Saque realizado.\nSaldo atual: R$${accountData.balance},00`
+          )
+        );
+
+        operation();
+      }
+    })
+    .catch();
+}
+
+function checkAmount(accountName, wdAmount) {
+  const accountData = getAccount(accountName);
+  if (parseFloat(accountData.balance) >= wdAmount) {
+    return true;
+  } else {
+    return false;
+  }
 }
