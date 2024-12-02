@@ -13,8 +13,8 @@ Certifique-se de ter o Node.js instalado em sua máquina. Clone o repositório e
 Make sure you have Node.js installed on your machine. Clone the repository and install the dependencies with the command below:
 
 ```bash
-git clone https://github.com/seu_usuario/seu_repositorio.git
 cd seu_repositorio
+git clone https://github.com/CaduConrado/Bank-Accounts
 npm install
 ```
 
@@ -34,7 +34,7 @@ npm start
 
 ## Funcionalidades (Features)
 
-## 1. Criar Conta / Create ## Account
+## 1. Criar Conta / Create Account ##
 
 **Descrição**: Permite criar uma nova conta fornecendo um novo exclusivo para a conta.
 
@@ -60,7 +60,7 @@ Parabens, sua conta foi criada com sucesso! (Congratulations, your account was s
 
 **Description**: Display the current balance of the specified account.
 
-## Exemplo (Example):##
+## Exemplo (Example): ##
 
 ```plaintext
 ? Qual operação deseja realizar? (What operation do you want to perform?)
